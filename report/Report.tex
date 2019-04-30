@@ -1,0 +1,283 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{fixltx2e}
+% \renewcommand{\baselinestretch}{0.985}
+
+\usepackage{natbib}
+\bibpunct[:]{(}{)}{;}{a}{}{,}
+\setlength{\bibsep}{2pt}
+\setlength{\bibhang}{0pt}
+
+\usepackage[a4paper, left=2.5cm, right=2.5cm, top=2.30cm, bottom=2.4cm]{geometry}
+\usepackage[kerning=true, protrusion=alltext, draft=false]{microtype}
+
+\usepackage[utf8]{inputenc}	% not working with ð and þ; use \eth and \thorn instead
+\usepackage[T1]{fontenc}	% scalable EC fonts
+\usepackage{mathptmx}
+\usepackage{tipx}
+\usepackage{ amssymb }
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{tikz-qtree}
+\usepackage{smartdiagram}
+
+
+\usepackage[tiny,compact]{titlesec}
+\usepackage[small,it]{caption}
+\usepackage{mdwlist}
+\usepackage{wrapfig}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{-1pt}
+\setlength{\parsep}{0pt}
+\setlength{\headsep}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\topmargin}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\partopsep}{0pt}
+\setlength{\headheight}{0pt}
+\setlength{\headsep}{0pt}
+%\pagestyle{empty}
+
+
+\newcommand{\tsb}[1]{\textsubscript{#1}}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+\urlstyle{same}
+
+\begin{document}
+\begin{center}
+    {\bfseries AMS 561 Project Report \\ How would you rate it: the Kindle project}
+    \end{center}
+
+
+\paragraph{Team Members} 
+\vspace{0.5cm}
+
+\begin{itemize}
+\item \textbf{Devoja Ganguli} (ganguli.devoja@stonybrook.edu)
+\begin{itemize}
+\item M.A. Student, Department of Economics
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{Nazila Shafiei} (nazila.shafiei@stonybrook.edu)
+\begin{itemize}
+\item Ph.D. Student, Department of Linguistics
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{Suji Yang} (suji.yang@stonybrook.edu )
+\begin{itemize}
+\item M.A. Student, Department of Linguistics
+\end{itemize}
+\end{itemize}
+
+\section{Introduction}
+
+With the exponential growth of social media, the users tend to rely on the reviews and the content of various website in decision making. However, the amount of opinion text in these websites is too vast that it has made finding and identifying relevant information for an average human reader difficult. Automated sentiment analysis systems are useful tools to help categorize the data into positive and negative sentiments. Sentiment analysis or \textit{opnion mining} is also a popular research topic in the field of NLP and Liguistics (Liu 2012). 
+
+The goal of this project is to determine the sentiment of user reviews classifying them as positive or negative. To do so, we use sentence level sentiment analysis on a set of reviews on Kindle books, taken from McAuley. 
+
+
+\section{Techniques and Tools}
+The main tool that was used is the scikit-learn library of Python for supervised machinelearning. In addition, we also needed to use other libraries for cleaning, tokenizing, and vectorizing the data, which are explained in the following sections. In the following sections, we explain the steps we took to complete the model.
+
+
+\subsection{Data}
+To begin with, we needed to have a pre-classified dataset that can be used as an input for machine learning tools. We chose Kindle book reviews on Amazon as our dataset. The data we use are taken from McAuley, with the product reviews spanning May 1996 - July 2014. The dataset contains not only reviews, but also ratings and helpfulness votes. For our purposes, we use the reviews since we want to analyze the sentiment of such sentences and we train our model to determine the rating of reviews based on the sentiment of the reviews. In other words, we look at the correlation between the written text and the rating that a user who has written such a text might provide. 
+
+\subsection{Cleaning the Data}
+The data is the json.gz format. Therefore, we used the \texttt{gzip} library to read the file in the form of a \textbf{DataFrame}. The next step is to clean the data. Cleaning basically means getting rid of unnecessary data and keeping what matters. Dealing with dataframe requires using \texttt{pandas} library. 
+
+Our dataset includes information about the user ID, reviewer name, helpfullness vote, review time, unix review time, review text, and overall rating. Among these, only the review text and rating is what matter to us. So, we cleaned our dataframe of the unnecessary information and kept the columns needed. 
+
+Since we prefer to use binary clustering, to correspond to our positive versus negative comments, we need to assign a threshold to the overall ratings and put them into two classes of positive and negative reviews. To do so, we used number 3 as our cut-off point, meaning that we consider ratings including and below 3 as negative and ratings of 4 and 5 as positive. To be able to feed this into the model, we assign number 1 to positive reviews and number 0 to negative values. In other words, we replace the ratings of 4 and 5 by number 1 and ratings of 1, 2, 3 with number 0. This would allow us to use binary classification of the data. 
+
+
+\subsection{Tokenizing and Splitting}
+Before tokenizing, we need to make sure that the data is clear of punctuation and special characters. This data can now be tokenized. Tokenizing is done on the review text and the end product of it is a list of lists. Each sublist corresponds to one review, and the superlist is a collection of all the reviews. 
+
+\subsection{Vectorization}
+For the data to be accessible by the algorithm, the data needs to be in numeric form (Bengfort, Bilbro $\&$ Ojeda 2018). This means that we need to convert our text format to numeric format. This is done via vectorization, which allows us to represent words and sentences with an array; and is done in two steps, word embedding and sentence embedding. 
+
+To perform vectorization, we use the \texttt{gensim} library and also Google's pre-trained Word2Vec model. This model represents words with 300 features, meaning that each word is an array of 300 elements. Using this model, we convert all our tokenized data into vectors. A similar step is required to vectorize sentences and in turn, each review. This would allow us to have a fixed size for all our reviews, i.e. 300, and would make the comparison of different reviews much easier. 
+
+\section{Training and Testing}
+
+\section{Conclusion}
+
+\section*{Selected References}
+\begin{enumerate}
+\item[1.] Bengfort, Benjamin, Rebecca Bilbro, and Tony Ojeda. 2018. \textit{Applied Text Analysis with Python: Enabling Language-aware Data Products with Machine Learning}. O'Reilly Media, Inc.
+\item[2.] He, Ruining, and Julian McAuley. 2016. Ups and downs: Modeling the visual evolution of fashion trends with one-class collaborative filtering. In \textit{proceedings of the 25th international conference on world wide web, pp. 507-517. International World Wide Web Conferences Steering Committee}
+\item[3.] Liu, Bing. 2012. Sentiment analysis and opinion mining. \textit{Synthesis lectures on human language technologies 5 (1)} : 1-167.
+\item [4.] McAuley, Julian. Amazon product data. \href{http://jmcauley.ucsd.edu/data/amazon/index.html}{http://jmcauley.ucsd.edu/data/amazon/index.html}
+
+\end{enumerate}
+\end{document}
+
+
+
+
+
+\subsection{Structure of the Code}
+The software can be grossly divided in two functionally separated macro modules: a \emph{preprocessing module}, adapting the inputs to fit the requirements of the system, and learning the set of parameters required for the output; and a \emph{generator module}, actually in charge of handling the poem generation.
+
+\subsubsection*{Preprocessing Module}
+
+The Preprocessing module is actually divided in two sub-components: an \emph{annotator} module and a \emph{learner}.
+
+  \begin{figure}[h!]
+\centering
+  \includegraphics[width=0.65\textwidth]{img/preprocessing}
+  \caption{Input Preprocessing Module}
+  \label{fig:preprocessing}
+  \end{figure}
+
+The \textbf{Annotator} module groups the functions devoted to creating a lexicon annotated with the information relevant to poetry generation.
+It takes as input a stress dictionary (a dictionary of words annotated with syllabic stress) and a corpus of text to use as reference for the language register.
+After a standard NLP preprocessing phase (the corpus is tokenized, and punctation marks and special characters are deleted), this module uses the input stress dictionary to annotate the language corpus.
+Moreover, a bigram scanner is run over the corpus to generate -- for each word -- the list of possible (i.e. grammatically acceptable) continuations (i.e. for each word, the list of words that can immediately follow it in the corpus).
+In output we get a new dictionary, were each word is associated to its syllable structure, stress, and acceptable continuations. 
+In order to optimize memory usage, for each word, instead of having a list explicitly containing all possible continuations, we refer to the list of indices in the dictionary where the possible continuations of that word can be found.
+The module uses the following core functions\footnote{Functions related to minor subtasks are not listed, since here we just aim to provide a general description of the code, not its full documentation.}:
+
+\begin{itemize}
+\item \texttt{process(fileName)}:    processes the dictionary referenced in  \texttt{fileName} by eliminating unnecessary information, and assigning stress structure to each word. The output is dictionary of the format \texttt{[word, stress]} --- where \texttt{stress} is a sequence of "s" (stressed syllable)) and "n" (unstressed syllable).
+\item \texttt{find\_contin(fineName,word\_list}):  Implements a bigram scanner which, for a given word in \texttt{word\_list}, returns the list of words in \texttt{fileName} that can follow it.
+\item \texttt{makedict(continuations, stress\_dict)}: Takes as inputs a list of words with their associated continuations and the dictionary of stress, and returns the final dictionary (\texttt{newDict}) as a list of words with their continuations and stress indicated.
+\item  \texttt{fakePoint(newDict)}: to improve memory usage, converts the list of possible continuations in the new dictionary into the list of their indices.
+\end{itemize}
+
+
+
+The \textbf{Learner} component takes as input the stress dictionary (after its has gone through the NLP preprocessing phase) and a corpus of poems, and returns the relevant rhythmic structure for the new poems to be generated.
+This is done by using the stress dictionary to infer the syllabic structure of each poem in the corpus.
+Although the current implementation is specifically suited to extract the information relevant to hainku generation, the module was structured in a way that should facilitate future extensions to the set of parameters that are learned.
+The relevant function is the following:
+
+\begin{itemize}
+
+\item  \texttt{haikize(fileName,cleandict)}:  The syllable information contained in \texttt{cleandict} is used to extract the  metrical structure of the poems in  \texttt{fileName}. This function produces a metrical matrix as a nested lists of integers   \texttt{[[int,int,int]...[int,int,int]]}, where the number of internal lists corresponds to the number of possible \emph{stanzas} in a poem, and  \texttt{len([int,int,int])} is the number of verses in the \emph{stanza} and each \texttt{int} corresponds to the number of syllables required by each line of the \emph{stanza}.
+\end{itemize}
+
+  
+  \subsubsection*{Poem Generator Module}
+  
+ The prepocessing module produces a dictionary of available words --- annotated with their syllabic structure, stress, and possible continuations --- and a matrix representing the metric structure of the poems we want to generate.
+ 
+   \begin{figure}[h!]
+\centering
+  \includegraphics[width=0.6\textwidth]{img/generator}
+  \caption{Poem Generator Module}
+  \label{fig:generator}
+  \end{figure}
+
+ 
+The \textbf{Generator} module task is to fill this matrix with words from the dictionary.
+The first word of each verse is randomly extracted from the dictionary. 
+Then, its possible continuations are explored in order to fill each verse with grammatical sequences that respect the metrical rhythmic structure (e.g. the number of syllables for in each verse).
+In order to improve the grammatical acceptability of the poem, we also flag some words as \emph{bad endings} (e.g. a verse should not end with a preposition).
+This module is structured around the following core function:
+
+\begin{itemize}
+\item \texttt{genHaiku(corpus, size)}: Generates haiku line-by-line, using the words in  \texttt{corpus} and following the structure specified in  \texttt{size}.
+\end{itemize}
+
+The \texttt{genHaiku()} function is called by a wrapper that allows to produce a number of different poems as specified by the user. A function \texttt{pretty()} saves the output to file and shows it on screen.
+
+
+\section{Conclusions}
+In order to test the performances of our system, we chose a particular form of poetry and a language corpus.
+
+
+\subsection{Case Study}
+As a baseline for the metric structure learning, we chose to use haiku, a particular form of Japanese short poetry.
+Traditionally, an haiku consists of $17$ syllables -- technically, Japanese \emph{on}, which are associated with short syllables (our stress based counting system accounts for this distinction, but syllable is an easier term to refer to in general discussions).
+These are divided in three verses of $5$, $7$, and $5$ on respectively [1].
+Given the regularity of haiku's rhythmic requirements, a single example is sufficient to train the learner. We used the poem \emph{Whitecaps On The Bay} by Richard Wright [2].
+
+The metrical constraints on haiku's verse structure are particularly restrictive when applied to the English language, where sequences of $5$ or $7$ syllables allow for more frequent grammatical mismatches (subject-verb agreement mistakes), and can lead to unfinished sentences.
+Moreover, to make the task more interesting, instead of producing a dictionary of standard English terms (e.g. for any standard corpus available in Python's NTLK), we extracted words lists from a collection of Oscar Wilde's poems [3].
+
+The stress dictionary that we used was compiled by Mike Hammond and 
+Diane Ohala at the University of Arizona, and it is freely available at  \href{http://dingo.sbs.arizona.edu/~hammond/lsasummer11/newdic}{http://dingo.sbs.arizona.edu/~hammond/lsasummer11/newdic}.
+
+\subsection{Evaluating the Output}
+We generated a sample of 100 haiku to test our system.
+
+From a quantitative point of view, the rhythmic requirements of the input corpus were respected by every poem in the output, thus the system has a $100\%$ accuracy with respect to its metrical requirements.
+Obviously though, this is not enough to judge the success of the implementation.
+In fact,  mere adherence to the metric of the original style is not an adequate measure of performance for this kind of application.
+However, it is difficult to provide an overall evaluation of the system performances in terms of the quality of the output, due to the creative component intrinsic to the task.
+In order to reduce the subjectivity of the evaluation, we decided beforehand  on a fixed set of parameters to consider when checking the outcomes of the application.
+
+\begin{itemize}
+\item language acceptability (e.g. grammatical mistakes);
+\item semantic coherence (e.g. switches in topics, unrelated subject-verb associations, etc);
+\item subjective quality of the poem.
+\end{itemize}
+
+Based on these guidelines, we came up with the following classification:
+
+\subsubsection*{Low quality poems}
+
+%bad
+\begin{quote}
+Haste precipitate\\
+symmetry of all right in\\
+incestuous gloom...
+\end{quote}
+
+The problem with this kind of output is in poor thematic coherence among the lines, but also borderline grammatical acceptability (e.g. line 2). 
+%We estimated that almost $40\%$ of our sample test fell in this group.
+
+\subsubsection*{Medium quality poems}
+% decent
+\begin{quote}
+Spite of ocean bed\\
+sang to the morning bee she \\
+sail against the black...
+\end{quote}
+
+This second set of poems has rare grammatical issues (e.g. sail instead of sails on line 3) that can be considered acceptable in the context of poetic language due to rhythmic requirements.
+The cohesion among lines is still somewhat off, possibly due to a lack of punctation marks.
+%We classified  $30\%$ of our sample test as belonging to this group.
+
+\subsubsection*{High quality poems}
+% good 
+\begin{quote}
+Other thing unknown\\
+burnt out the night of yellow\\
+ hyacinth glory...
+ \end{quote}
+ 
+ The third set groups poems with almost no grammaticality issues, and top-notch internal cohesion.
+ For example, the poem above could be read as a single line of text.
+% We classified  $30\%$ of our sample test as belonging to this group.
+
+\subsection{Conclusion and Future Work}
+
+Currently, there are several issues that we think can be addressed in the future, in order to get optimal results:
+
+\begin{itemize}
+\item Grammatical mistakes:  In this implementation we reduced grammaticality to possible bigram sequences, extracted from the frequency of word occurrences in the corpus. In the future, this could be augmented with context-free grammars enriched with transition probabilities, in order to consider both word frequencies and structural constraints of the English language. 
+\item Semantic coherence: The generator so far ignores how well each verse in an haiku is related to the others. This part of the algorithm could be improved by exploiting semantic similarity metrics computed over words and over phrases by exploiting well-known semantic ontologies (e.g. Wordnet [4]). 
+Integrating this application into external platforms for semantic analysis should be  relatively painless --- another advantage of having used Python for the implementation.
+\end{itemize}
+
+In order to get a rigorous evaluation of our system, a set of human subjects could be tasked to go through a sample set and group the automatically generated poems on the base of the classification we provided above.
+Unfortunately, it was not possible to perform such a test due to the time constraints set for this project, and the lack of interested subjects.
+We are aware of the consequent lack of a proper analysis of the performance of the system. However, the set of poems we previously reported were all generated by the system, and the 100 poems generated in the final test were almost equally distributed in the three groups identified by the classification provided above (with a slight preference for the low quality group).
+In our opinion, this shows that  the implementation is indeed able to produce haiku corresponding to different degrees of acceptability. For a prototype, we believe this to be a significant result.
+
